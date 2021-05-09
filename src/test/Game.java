@@ -3,6 +3,7 @@ package test;
 import ui.ChessActionListener;
 import ui.ChessWindow;
 import ui.Highlight;
+import ui.MoveHighlight;
 
 public class Game {
 
@@ -16,13 +17,16 @@ public class Game {
 			@Override
 			public void pickedPieceUp(char piece, String from) {
 				System.out.println(piece + from);
-				cw.addHighlight(new Highlight(from));
+				cw.addHighlight(new MoveHighlight(from));
 			}
 			
 			@Override
 			public void movePieceAttempt(char piece, String from, String to) {
 				System.out.println(piece + from + to);
 				cw.clearHighlights();
+				
+				cw.setPieceAt(to, piece);
+				cw.clearPieceAt(from);
 			}
 
 			@Override

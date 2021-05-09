@@ -1,6 +1,6 @@
 package ui;
 
-public class Highlight {
+public abstract class Highlight {
 
 	private String tile;
 	
