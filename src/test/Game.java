@@ -2,7 +2,6 @@ package test;
 
 import ui.ChessActionListener;
 import ui.ChessWindow;
-import ui.Highlight;
 import ui.MoveHighlight;
 
 public class Game {

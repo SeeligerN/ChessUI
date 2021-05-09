@@ -133,27 +133,25 @@ public class ChessWindow {
 
 		updateFEN();
 	}
-	
+
 	private void updateFEN() {
-		
+
 		String fen = "";
-		
+
 		// generate simple FEN
 		for (int rank = 7; rank >= 0; rank--) {
 			for (int file = 0; file < 8; file++) {
-				if ("prnbqkPRNBQK".contains("" + position[file][rank]))
-					fen += position[file][rank];
-				else
-					fen += "1";
+				if ("prnbqkPRNBQK".contains("" + position[file][rank])) fen += position[file][rank];
+				else fen += "1";
 			}
 			fen += "/";
 		}
 		fen = fen.substring(0, fen.length() - 1);
-		
+
 		// collapse numbers
 		for (int i = 8; i >= 2; i--) // this is much too creative for corporate environments
 			fen = fen.replaceAll("1{" + i + "}", "" + i);
-		
+
 		this.fen = fen;
 	}
 
@@ -165,8 +163,7 @@ public class ChessWindow {
 		char[][] board = new char[8][8];
 
 		fen = fen.split(" ")[0];
-		if (fen.split("/").length != 8)
-			return; // incorrect amount of ranks specified
+		if (fen.split("/").length != 8) return; // incorrect amount of ranks specified
 
 		for (int rank = 7; rank >= 0; rank--) {
 			String rankS = fen.split("/")[7 - rank];
@@ -183,8 +180,7 @@ public class ChessWindow {
 				} else {
 					return; // illegal char
 				}
-				if (file > 7)
-					break;
+				if (file > 7) break;
 			}
 		}
 
@@ -203,21 +199,15 @@ public class ChessWindow {
 			System.out.println("+---+---+---+---+---+---+---+---+");
 			for (int file = 0; file < 8; file++) {
 				System.out.print("|");
-				if (showFlipped)
-					System.out.print(" " + position[7 - file][7 - rank] + " ");
-				else
-					System.out.print(" " + position[file][rank] + " ");
+				if (showFlipped) System.out.print(" " + position[7 - file][7 - rank] + " ");
+				else System.out.print(" " + position[file][rank] + " ");
 			}
-			if (showFlipped)
-				System.out.print(7 - rank + 1);
-			else
-				System.out.print(rank + 1);
+			if (showFlipped) System.out.print(7 - rank + 1);
+			else System.out.print(rank + 1);
 			System.out.println();
 		}
-		if (showFlipped)
-			System.out.println("+-H-+-G-+-F-+-E-+-D-+-C-+-B-+-A-+");
-		else
-			System.out.println("+-A-+-B-+-C-+-D-+-E-+-F-+-G-+-H-+");
+		if (showFlipped) System.out.println("+-H-+-G-+-F-+-E-+-D-+-C-+-B-+-A-+");
+		else System.out.println("+-A-+-B-+-C-+-D-+-E-+-F-+-G-+-H-+");
 	}
 
 	private class DrawLabel extends JLabel {
@@ -264,10 +254,8 @@ public class ChessWindow {
 			for (int x = 0; x < 8; x++) {
 				for (int y = 0; y < 8; y++) {
 					Color tileColor = null;
-					if ((x + y) % 2 == 0)
-						tileColor = light;
-					else
-						tileColor = dark;
+					if ((x + y) % 2 == 0) tileColor = light;
+					else tileColor = dark;
 
 					// draw bg
 					g.setColor(tileColor);
@@ -282,24 +270,29 @@ public class ChessWindow {
 
 				// draw file letters
 				for (int file = 0; file < 8; file++) {
-					if (file % 2 == 0)
-						g.setColor(light);
-					else
-						g.setColor(dark);
+					if (file % 2 == 0) g.setColor(light);
+					else g.setColor(dark);
+					
 					String fileLetter = "" + (char) ('A' + file);
+					if (showFlipped)
+						fileLetter = "" + (char) ('A' + (7 - file));
+					
 					g.drawString(fileLetter, (float) (tileWidth * file + tileWidth * .05),
 							(float) (boardWidth - tileWidth * .05));
 				}
 
 				// draw rank numbers
 				for (int rank = 0; rank < 8; rank++) {
-					if (rank % 2 == 0)
-						g.setColor(light);
-					else
-						g.setColor(dark);
+					if (rank % 2 == 0) g.setColor(light);
+					else g.setColor(dark);
+					
 					String fileLetter = "" + (char) ('8' - rank);
+					if (showFlipped)
+						fileLetter = "" + (char) ('8' - (7 - rank));
+					
 					int letterWidth = g.getFontMetrics().stringWidth(fileLetter);
 					int letterHeight = g.getFont().getSize();
+					
 					g.drawString(fileLetter, (int) (boardWidth - tileWidth * .05 - letterWidth),
 							(int) (tileWidth * rank + tileWidth * .05 + letterHeight));
 				}
@@ -326,8 +319,7 @@ public class ChessWindow {
 					// draw pieces
 					if (!(pickedUpX == x && pickedUpY == y)) { // if this piece isn't held by the mouse
 						char piece = position[x][7 - y];
-						if (showFlipped)
-							piece = position[7 - x][y];
+						if (showFlipped) piece = position[7 - x][y];
 						g.drawImage(textures[piece], x * tileWidth, y * tileWidth, tileWidth, tileWidth, null);
 					}
 				}
@@ -363,8 +355,7 @@ public class ChessWindow {
 
 		@Override
 		public void keyReleased(KeyEvent e) {
-			if (e.getKeyCode() == KeyEvent.VK_F)
-				flipHandled = false;
+			if (e.getKeyCode() == KeyEvent.VK_F) flipHandled = false;
 		}
 
 	}
@@ -377,10 +368,8 @@ public class ChessWindow {
 		int mouseY = 0;
 
 		public boolean isMovingPiece() {
-			if (from == null)
-				return false;
-			if (from.isEmpty())
-				return false;
+			if (from == null) return false;
+			if (from.isEmpty()) return false;
 			return true;
 		}
 
@@ -391,8 +380,7 @@ public class ChessWindow {
 
 		@Override
 		public void mousePressed(MouseEvent e) {
-			if (e.getButton() != 1)
-				return;
+			if (e.getButton() != 1) return;
 
 			int boardWidth = (dl.getWidth() - margin) < (dl.getHeight() - margin) ? (dl.getWidth() - margin)
 					: (dl.getHeight() - margin);
@@ -402,22 +390,16 @@ public class ChessWindow {
 			int xOnBoard = e.getX() - (dl.getWidth() / 2 - boardWidth / 2);
 			int yOnBoard = e.getY() - (dl.getHeight() / 2 - boardWidth / 2);
 
-			if (xOnBoard > boardWidth)
-				return;
-			if (yOnBoard > boardWidth)
-				return;
+			if (xOnBoard > boardWidth) return;
+			if (yOnBoard > boardWidth) return;
 
 			piece = position[xOnBoard / tileWidth][7 - yOnBoard / tileWidth];
-			if (showFlipped)
-				piece = position[7 - xOnBoard / tileWidth][yOnBoard / tileWidth];
+			if (showFlipped) piece = position[7 - xOnBoard / tileWidth][yOnBoard / tileWidth];
 
-			if (!"prnbqkPRNBQK".contains("" + piece))
-				return;
+			if (!"prnbqkPRNBQK".contains("" + piece)) return;
 
-			if (showFlipped)
-				from = "" + (char) ('H' - xOnBoard / tileWidth) + (1 + yOnBoard / tileWidth);
-			else
-				from = "" + (char) ('A' + xOnBoard / tileWidth) + (8 - yOnBoard / tileWidth);
+			if (showFlipped) from = "" + (char) ('H' - xOnBoard / tileWidth) + (1 + yOnBoard / tileWidth);
+			else from = "" + (char) ('A' + xOnBoard / tileWidth) + (8 - yOnBoard / tileWidth);
 
 			// trigger chess action listeners
 			for (ChessActionListener listener : listeners)
@@ -428,11 +410,9 @@ public class ChessWindow {
 
 		@Override
 		public void mouseReleased(MouseEvent e) {
-			if (e.getButton() != 1)
-				return;
+			if (e.getButton() != 1) return;
 
-			if (!isMovingPiece())
-				return;
+			if (!isMovingPiece()) return;
 
 			String move = from;
 			from = null;
@@ -447,15 +427,11 @@ public class ChessWindow {
 			int xOnBoard = e.getX() - (dl.getWidth() / 2 - boardWidth / 2);
 			int yOnBoard = e.getY() - (dl.getHeight() / 2 - boardWidth / 2);
 
-			if (xOnBoard > boardWidth)
-				return;
-			if (yOnBoard > boardWidth)
-				return;
+			if (xOnBoard > boardWidth) return;
+			if (yOnBoard > boardWidth) return;
 
-			if (showFlipped)
-				move += "" + (char) ('H' - xOnBoard / tileWidth) + (1 + yOnBoard / tileWidth);
-			else
-				move += "" + (char) ('A' + xOnBoard / tileWidth) + (8 - yOnBoard / tileWidth);
+			if (showFlipped) move += "" + (char) ('H' - xOnBoard / tileWidth) + (1 + yOnBoard / tileWidth);
+			else move += "" + (char) ('A' + xOnBoard / tileWidth) + (8 - yOnBoard / tileWidth);
 
 			if (move.substring(2).equals(move.substring(0, 2))) {
 				for (ChessActionListener listener : listeners)
@@ -488,8 +464,7 @@ public class ChessWindow {
 
 			frame.repaint();
 
-			if (e.getButton() != 1)
-				return;
+			if (e.getButton() != 1) return;
 
 		}
 
